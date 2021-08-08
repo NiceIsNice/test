@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="Style.css">
+  </head>
+
+  <body>
+    <H1>Test de l'api du scanner</H1>
+
+    <form onsubmit="mindeeSubmit(event)">
+      <input type="file" id="my-file-input" name="file" />
+      <input type="submit" />
+    </form>
+
+    <script type="text/javascript">
+      const mindeeSubmit = (evt) => {
+        evt.preventDefault()
+        let myFileInput = document.getElementById('my-file-input');
+        let myFile = myFileInput.files[0]
+        if (!myFile) { return }
+        let data = new FormData();
+        data.append("document", myFile, myFile.name);
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            console.log(this.responseText);
+          }
+        });
+
+        xhr.open("POST", "https://api.mindee.net/v1/products/mindee/expense_receipts/v3/predict");
+        xhr.setRequestHeader("Authorization", "Token 06cde4e0a0b3a6c856bbe7a6383021ce");
+        xhr.send(data);
+        console.log(data);
+        // export
+        // const exportToJsonFile = (data) => {
+          const dataStr = JSON.stringify(data);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+          const exportFileDefaultName = 'data.json';
+
+          const linkElement = document.createElement('a');
+          linkElement.setAttribute('href', dataUri);
+          linkElement.setAttribute('download', exportFileDefaultName);
+          linkElement.click();
+        // }
+
+      }
+
+
+
+    </script>
+
+    <script src="lib/index.js"></script>
+    <script src="lib/openApi.js"></script>
+
+  </body>
+</html>
